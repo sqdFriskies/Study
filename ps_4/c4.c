@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "c4.h"
-
+#include <curses.h>
 // void initialize_board(int rows, int cols, char board[rows][cols])
 // {
 
