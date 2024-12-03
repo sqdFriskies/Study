@@ -1,7 +1,7 @@
 #include <math.h>
 #include <curses.h>
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <time.h>
 #include "ballsortpuzzle.h"
 #include "c4.h"
@@ -20,14 +20,12 @@ int main()
 
     // generator(rows, columns, field); // ПРОВЕРКА ДЛЯ 1-ГО ЗАДАНИЯ
 
-
-
-    const int rows = 8, columns = 6;
-    char field[rows][columns];
+    // const int rows = 8, columns = 6;
+    // char field[rows][columns];
 
     // // Инициализация массива вручную
     // char init_data[4][6] = {
-    //     {' ', ' ', '^', '@', '@', ' '},  
+    //     {' ', ' ', '^', '@', '@', ' '},
     //     {'+', ' ', '^', '@', '^', ' '},
     //     {'+', ' ', '*', '+', '+', ' '},
     //     {'*', '+', '*', '@', '^', ' '}   // ПРОВЕРКА ДЛЯ 2 ЗАДАНИЯ
@@ -39,31 +37,31 @@ int main()
     //     }
     // }
 
-char init_data[8][6] = {
-      {'+','*',' ','*',' ',' '},
-      {'@','^','*','^',' ',' '},
-      {'^','*','+','*',' ',' '},
-      {'*','+','@','*',' ',' '},
-      {'+','@','^','^',' ',' '},
-      {'+','@','*','+',' ',' '},
-      {'^','+','^','@',' ',' '},
-      {'@','@','+','@',' ',' '}
-      }; // ПРОВЕРКА ДЛЯ 2 ЗАДАНИЯ
-    
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            field[i][j] = init_data[i][j];
-        }
-    }
-    print_field(rows, columns, field);
-    down_possible(rows, columns, field, 2, 3);
-    print_field(rows, columns, field);
+    // char init_data[8][6] = {
+    //     {' ', ' ', ' ', ' ', ' ', ' '},
+    //     {' ', '^', ' ', '^', ' ', '@'},
+    //     {' ', '*', '+', '*', ' ', '^'},
+    //     {' ', '+', '@', '*', ' ', '*'},
+    //     {' ', '@', '^', '^', ' ', '+'},
+    //     {' ', '@', '*', '+', ' ', '+'},
+    //     {' ', '+', '^', '@', ' ', '^'},
+    //     {' ', '@', '+', '@', ' ', '@'}}; // ПРОВЕРКА ДЛЯ 2 ЗАДАНИЯ
 
+    // for (int i = 0; i < rows; i++)
+    // {
+    //     for (int j = 0; j < columns; j++)
+    //     {
+    //         field[i][j] = init_data[i][j];
+    //     }
+    // }
+    // game_field(rows, columns, field);
+    // down_possible(rows, columns, field, 4, 5);
+    // print_field(rows, columns, field);
 
     // const int rows = 4;
     // const int columns = 6;
 
-    // 
+    //
     // char field[4][6] = {
     //     {'@', '+', ' ', ' ', ' ', ' '},
     //     {'@', '+', ' ', ' ', ' ', ' '},
@@ -71,7 +69,7 @@ char init_data[8][6] = {
     //     {'@', '+', ' ', ' ', ' ', ' '}
     // };                                   // ПРОВЕРКА ДЛЯ 3 ЗАДАНИЯ
 
-    // 
+    //
     // printf("Game field:\n");
     // for (int i = 0; i < rows; i++) {
     //     printf("%d |", i + 1);
@@ -81,9 +79,9 @@ char init_data[8][6] = {
     //     printf("\n");
     // }
 
-    // 
+    //
     // printf("---");
-    // for (int j = 0; j < columns; j++) 
+    // for (int j = 0; j < columns; j++)
     //{
     //     printf("----");
     // }
@@ -97,14 +95,12 @@ char init_data[8][6] = {
     // printf("\n");
 
     // // Call the check function and display the result
-    // if (check(rows, columns, field)) 
+    // if (check(rows, columns, field))
     //{
     //     printf("All columns are fully collected (true).\n");
     // } else {
     //     printf("Some columns are incomplete or have mixed symbols (false).\n");
     // }
-
-    
+    ball_sort_puzzle();
     return 0;
-
 }
