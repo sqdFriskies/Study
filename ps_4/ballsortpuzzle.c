@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "ballsortpuzzle.h"
 #include <time.h>
+#include <ncurses.h>
 
 // bool check(const int rows, const int columns, char field[rows][columns])
 // {
@@ -120,29 +121,113 @@ void print_line(const int rows, const int columns, char field[rows][columns], in
     printf("\n");
 }
 
+// Печать строки игрового поля с использованием ncurses
+// Печать строки игрового поля с использованием ncurses
+// Печать строки игрового поля с использованием ncurses
+void print_line_ncurses(const int rows, const int columns, char field[rows][columns], int row)
+{
+    int x, y;
+    getyx(stdscr, y, x);
+
+    move(y++, x + 38 - (columns + 4));
+    attron(COLOR_PAIR(2));
+    printw("%d ", row + 1);
+    attroff(COLOR_PAIR(2));
+
+    attron(COLOR_PAIR(4));
+    printw("|");
+    attroff(COLOR_PAIR(4));
+
+    for (int j = 0; j < columns; j++)
+    {
+        attron(COLOR_PAIR(3));
+        printw(" %c ", field[row][j]);
+        attroff(COLOR_PAIR(3));
+        attron(COLOR_PAIR(4));
+        printw("|");
+        attroff(COLOR_PAIR(4));
+    }
+    printw("\n");
+}
+
+// Функция для отображения большого текста "BALL SORT"
+void draw_big_text(int start_row, int start_col)
+{
+    int t_start_row = start_row;
+    int t_start_col = start_col;
+    // ASCII-арт для текста "BALL SORT"
+    attron(COLOR_PAIR(4));
+    mvprintw(t_start_col++, t_start_row, "######      ###     ##        ##           #####    #######  #####    ########");
+    mvprintw(t_start_col++, t_start_row, "##   ##   ##   ##   ##        ##          #     #  ##     ## ##   ##     ##   ");
+    mvprintw(t_start_col++, t_start_row, "##   ##  ##     ##  ##        ##          #        ##     ## ##   ##     ##   ");
+    mvprintw(t_start_col++, t_start_row, "#####    #########  ##        ##           #####   ##     ## #####       ##   ");
+    mvprintw(t_start_col++, t_start_row, "##   ##  ##     ##  ##        ##                #  ##     ## ##  ##      ##   ");
+    mvprintw(t_start_col++, t_start_row, "##   ##  ##     ##  ##        ##          #     #  ##     ## ##   ##     ##   ");
+    mvprintw(t_start_col++, t_start_row, "######   ##     ##  ########  ########     #####    #######  ##    ##    ##   \n");
+    attroff(COLOR_PAIR(4));
+    // Вывод текста с использованием ncurses
+}
+
+// Функция для отображения игрового поля с использованием ncurses и надписью "BALL SORT"
 void game_field(const int rows, const int columns, char field[rows][columns])
 {
-    printf("\n");
-    // Print each row
+    initscr();     // Инициализация экрана
+    start_color(); // Инициализация цветов
+    cbreak();      // Непрерывный ввод
+    noecho();      // Отключение отображения вводимых символов
+
+    // Определение цветовых пар
+    init_pair(1, COLOR_CYAN, COLOR_BLACK);   // Заголовок
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);  // Нумерация строк
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Символы игрового поля
+    init_pair(4, COLOR_RED, COLOR_BLACK);    // Границы игрового поля
+    init_pair(5, COLOR_RED, COLOR_BLACK);    // Подсветка "BALL"
+    init_pair(6, COLOR_YELLOW, COLOR_BLACK); // Подсветка "SORT"
+    init_pair(7, COLOR_BLUE, COLOR_BLACK);
+
+    // Печать заголовка "BALL SORT" с использованием draw_big_text
+    draw_big_text(0, 0);
+    int x, y;
+    getyx(stdscr, y, x);
+    y++;
+    // Печать верхней границы игрового поля
+    attron(COLOR_PAIR(4));
+    mvprintw(y, x + 40 - (columns + 4), "+");
+    for (int j = 0; j < columns; j++)
+    {
+        printw("---+");
+    }
+    attroff(COLOR_PAIR(4));
+
+    // Печать каждой строки
+    printw("\n");
     for (int i = 0; i < rows; i++)
     {
-        print_line(rows, columns, field, i);
+        print_line_ncurses(rows, columns, field, i);
     }
+    getyx(stdscr, y, x);
 
-    // Print the bottom line ---
-    printf("  ");
+    // Печать нижней границы игрового поля
+    attron(COLOR_PAIR(4));
+    move(y++, x + 40 - (columns + 4));
+    printw("+");
     for (int j = 0; j < columns; j++)
     {
-        printf("+---");
+        printw("---+");
     }
-    printf("+\n   ");
+    attroff(COLOR_PAIR(4));
 
-    // Print column numbering
+    // Печать нумерации столбцов
+    move(y, x + 42 - (columns + 4));
     for (int j = 0; j < columns; j++)
     {
-        printf(" %d  ", j + 1);
+        printw("%d   ", j + 1);
     }
-    printf("\n");
+    printw("\n");
+
+    refresh(); // Обновление экрана
+    getch();   // Ожидание нажатия клавиши
+    endwin();  // Завершение работы с ncurses
 }
 
 void generator(const int rows, const int columns, char field[rows][columns])
@@ -253,8 +338,8 @@ bool check(const int rows, const int columns, char field[rows][columns])
 void ball_sort_puzzle()
 {
     system("clear");
-    int rows = 3;
-    int cols = 4;
+    int rows = 4;
+    int cols = 6;
     char field[rows][cols];
     generator(rows, cols, field);
 
@@ -262,13 +347,13 @@ void ball_sort_puzzle()
     while (!check(rows, cols, field))
     {
         game_field(rows, cols, field);
-        printf("\nPosition 1: ");
-        scanf("%d", &pos1);
-        printf("\nPosition 2: ");
-        scanf("%d", &pos2);
+        printw("\nPosition 1: ");
+        scanw("%d", &pos1);
+        printw("\nPosition 2: "); 
+        scanw("%d", &pos2);
         system("clear");
         down_possible(rows, cols, field, pos1, pos2);
     }
     game_field(rows, cols, field);
-    printf("\nYou win!\n");
+    printw("\nYou win!\n");
 }
