@@ -48,13 +48,13 @@ void print_board(int rows, int cols, const char board[rows][cols])
 }
 int is_valid_move(int rows, int cols, const char board[rows][cols], int col)
 {
-    if(col-1 < 0 || col-1 > cols)
+    if (col - 1 < 0 || col - 1 > cols)
     {
         return false;
     }
 
     bool switcher = false;
-    
+
     for (int i = rows - 1; i >= 0; i--)
     {
         if (board[i][col - 1] == '.')
@@ -74,7 +74,7 @@ int drop_piece(int rows, int cols, char board[rows][cols], int col, char player_
         if (board[i][col - 1] == '.')
         {
             board[i][col - 1] = player_piece;
-            return 1;
+            return i;
         }
     }
     return -1;
@@ -84,12 +84,13 @@ int count_diagonal(int rows, int cols, const char board[rows][cols], int row, in
 {
     int count = 0;
     {
-        int r = row;
-        int c = col;
+        int r = row - 1;
+        int c = col - 1;
 
         for (; ((delta_r >= 0) ? r < rows : r >= 0) &&
                ((delta_c >= 0) ? c < cols : c >= 0) &&
-               (board[r][c] == player_piece); r+=delta_r, c+=delta_c)
+               (board[r][c] == player_piece);
+             r += delta_r, c += delta_c)
         {
             count++;
         }
@@ -102,22 +103,22 @@ int check_win(int rows, int cols, const char board[rows][cols], int row, int col
     int count = 0;
     count += count_diagonal(rows, cols, board, row, col, player_piece, +1, 0);
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, 0);
-    if (count - 1 == rows)
+    if (count - 1 >= rows)
     {
         return 1;
     }
     count = 0;
     count += count_diagonal(rows, cols, board, row, col, player_piece, 0, -1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, 0, +1);
-    if (count - 1 == rows)
+    if (count - 1 >= rows)
     {
         return 1;
     }
-    
+
     count = 0;
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, +1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, +1, -1);
-    if (count - 1 == rows)
+    if (count - 1 >= rows)
     {
         return 1;
     }
@@ -125,11 +126,11 @@ int check_win(int rows, int cols, const char board[rows][cols], int row, int col
     count = 0;
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, -1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, +1, +1);
-    if (count - 1 == rows)
+    if (count - 1 >= rows)
     {
         return 1;
     }
-    
+
     return 0;
 }
 
@@ -148,17 +149,20 @@ int is_board_full(int rows, int cols, const char board[rows][cols])
     return 1;
 }
 
-
 void run_c4()
 {
-    int rows = 4;
-    int cols = 4;
-    char board[rows][cols];
-    
+    const int rows = 4;
+    const int cols = 6;
+    char board[4][6] = {
+        {'O', 'X', 'X', 'O', 'O', 'X'},
+        {'O', 'X', 'X', 'O', 'X', 'O'},
+        {'O', 'X', 'X', 'X', 'O', 'O'},
+        {'X', '.', 'O', 'X', 'O', 'O'}
+        }; 
     bool is_player_x = true;
-    initialize_board(rows, cols, board);
-    
-    while (!is_board_full(rows, cols, board) )
+    // initialize_board(rows, cols, board);
+
+    while (!is_board_full(rows, cols, board))
     {
 
         const char player_piece = is_player_x ? 'X' : 'O';
@@ -169,12 +173,13 @@ void run_c4()
         printf("\n");
         printf("\nPlayer %c: ", player_piece);
         scanf("%d", &player_choice);
-        
-        if ( player_choice >= 0 && is_valid_move(rows, cols, board, player_choice))
+
+        if (player_choice >= 0 && is_valid_move(rows, cols, board, player_choice))
         {
-            if (drop_piece(rows, cols, board, player_choice, player_piece)>0)
+            const int row = drop_piece(rows, cols, board, player_choice, player_piece);
+            if (row >=0 )
             {
-                if (check_win(rows, cols, board, 0, 0, player_piece))
+                if (check_win(rows, cols, board, row+1, player_choice, player_piece))
                 {
                     printf("\nYou win!\n");
                     break;
@@ -185,9 +190,6 @@ void run_c4()
         {
             printf("\nError: move is not valid. \nYou skip your turn.\n\n");
         }
-
-        
-
     }
     print_board(rows, cols, board);
 }
