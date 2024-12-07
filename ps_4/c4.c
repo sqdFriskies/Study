@@ -84,8 +84,8 @@ int count_diagonal(int rows, int cols, const char board[rows][cols], int row, in
 {
     int count = 0;
     {
-        int r = row - 1;
-        int c = col - 1;
+        int r = row;
+        int c = col;
 
         for (; ((delta_r >= 0) ? r < rows : r >= 0) &&
                ((delta_c >= 0) ? c < cols : c >= 0) &&
@@ -155,7 +155,7 @@ int is_board_full(int rows, int cols, const char board[rows][cols])
 void run_c4()
 {
     int rows = 4;
-    int cols = 4;
+    int cols = 7;
     char board[rows][cols];
     
     bool is_player_x = true;
@@ -178,7 +178,7 @@ void run_c4()
             const int row = drop_piece(rows, cols, board, player_choice, player_piece);
             if (row >=0 )
             {
-                if (check_win(rows, cols, board, row+1, player_choice, player_piece))
+                if (check_win(rows, cols, board, row, player_choice - 1, player_piece))
                 {
                     printf("\nYou win!\n");
                     break;

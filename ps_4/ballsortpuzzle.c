@@ -338,22 +338,27 @@ bool check(const int rows, const int columns, char field[rows][columns])
 void ball_sort_puzzle()
 {
     system("clear");
-    int rows = 4;
-    int cols = 6;
+    int rows = 2;
+    int cols = 4;
     char field[rows][cols];
     generator(rows, cols, field);
 
     int pos1, pos2;
     while (!check(rows, cols, field))
     {
+        if(check(rows,cols,field))
+        {
+            game_field(rows, cols, field);
+            printw("\nYo ");
+            system("pause");
+        }
         game_field(rows, cols, field);
         printw("\nPosition 1: ");
         scanw("%d", &pos1);
-        printw("\nPosition 2: "); 
+        printw("\nPosition 2: ");
         scanw("%d", &pos2);
-        system("clear");
+        
         down_possible(rows, cols, field, pos1, pos2);
     }
-    game_field(rows, cols, field);
-    printw("\nYou win!\n");
+
 }

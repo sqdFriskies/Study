@@ -21,7 +21,7 @@ int main()
 
         // char field[rows][columns];
 
-        // generator(rows, columns, field); // ПРОВЕРКА ДЛЯ 1-ГО ЗАДАНИЯ
+        // generator(rows, columns, field); // test of task_1
 
         // const int rows = 8, columns = 6;
         // char field[rows][columns];
@@ -31,7 +31,7 @@ int main()
         //     {' ', ' ', '^', '@', '@', ' '},
         //     {'+', ' ', '^', '@', '^', ' '},
         //     {'+', ' ', '*', '+', '+', ' '},
-        //     {'*', '+', '*', '@', '^', ' '}   // ПРОВЕРКА ДЛЯ 2 ЗАДАНИЯ
+        //     {'*', '+', '*', '@', '^', ' '}   // test of task_2
         // };
 
         // for (int i = 0; i < rows; i++) {
@@ -106,7 +106,8 @@ int main()
         // }
     }
     // system("clear");
-    run_c4();
 
+    //ball_sort_puzzle();
+    run_c4();
     return 0;
 }
