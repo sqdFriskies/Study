@@ -154,12 +154,16 @@ int is_board_full(int rows, int cols, const char board[rows][cols])
 
 void run_c4()
 {
-    int rows = 4;
-    int cols = 7;
-    char board[rows][cols];
-    
+    const int rows = 4;
+    const int cols = 7;
+    char board[4][7] = {
+        {'.', '.', '.', '.', '.', '.', '.'},
+        {'O', 'X', '.', '.', '.', '.', '.'},
+        {'O', 'O', 'X', '.', '.', '.', '.'},
+        {'O', 'O', 'O', 'X', '.', '.', '.'}
+        };
     bool is_player_x = true;
-    initialize_board(rows, cols, board);
+    // initialize_board(rows, cols, board);
 
     while (!is_board_full(rows, cols, board))
     {
