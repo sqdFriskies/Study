@@ -101,28 +101,31 @@ int count_diagonal(int rows, int cols, const char board[rows][cols], int row, in
 int check_win(int rows, int cols, const char board[rows][cols], int row, int col, char player_piece)
 {
     int count = 0;
-    count += count_diagonal(rows, cols, board, row, col, player_piece, +1, 0);
+    // up/down vertical
+    count += count_diagonal(rows, cols, board, row, col, player_piece, +1, 0); 
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, 0);
     if (count - 1 >= rows)
     {
         return 1;
     }
     count = 0;
+    // right/left gorizontal
     count += count_diagonal(rows, cols, board, row, col, player_piece, 0, -1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, 0, +1);
-    if (count - 1 >= rows)
+    if (count - 1 >= cols)
     {
         return 1;
     }
 
     count = 0;
+    // right/up diagonal
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, +1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, +1, -1);
     if (count - 1 >= rows)
     {
         return 1;
     }
-
+    // left/down diagonal
     count = 0;
     count += count_diagonal(rows, cols, board, row, col, player_piece, -1, -1);
     count += count_diagonal(rows, cols, board, row, col, player_piece, +1, +1);
@@ -154,10 +157,10 @@ void run_c4()
     const int rows = 4;
     const int cols = 6;
     char board[4][6] = {
-        {'O', 'X', 'X', 'O', 'O', 'X'},
+        {'O', '.', 'X', 'X', 'X', 'X'},
         {'O', 'X', 'X', 'O', 'X', 'O'},
-        {'O', 'X', 'X', 'X', 'O', 'O'},
-        {'X', '.', 'O', 'X', 'O', 'O'}
+        {'O', 'O', 'X', 'X', 'O', 'O'},
+        {'X', 'X', 'O', 'X', 'O', 'O'}
         }; 
     bool is_player_x = true;
     // initialize_board(rows, cols, board);
