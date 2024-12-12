@@ -2,30 +2,103 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+
 void encode_char(const char character, bool bits[8]);
 char decode_byte(const bool bits[8]);
 void encode_string(const char string[], bool bytes[strlen(string) + 1][8]);
 void decode_bytes(const int rows, bool bytes[rows][8], char string[rows]);
 void bytes_to_blocks(const int cols, const int offset, bool blocks[offset * 8][cols], const int rows, bool bytes[rows][8]);
 void blocks_to_bytes(const int cols, const int offset, bool blocks[offset * 8][cols], const int rows, bool bytes[rows][8]);
+int power(int base, int exp);
 int main()
 {
-    bool bits1[8];
-    encode_char('A', bits1);
-    for (int i = 0; i < 8; i++)
+    int length = 4 + 1, cols = 3, offset = 2;
+    bool bytes1[4 + 1][8] = {
+        {0, 1, 0, 0, 0, 0, 0, 1},
+        {0, 1, 1, 0, 1, 0, 0, 0},
+        {0, 1, 1, 0, 1, 1, 1, 1},
+        {0, 1, 1, 0, 1, 0, 1, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0}};
+    bool blocks1[offset * 8][cols];
+    bytes_to_blocks(cols, offset, blocks1, length, bytes1);
+    for (int j = 0; j < offset * 8; j++)
     {
-        printf("%d", bits1[i]);
+        for (int i = 0; i < cols; i++)
+        {
+            printf("%d ", (blocks1[j][i] == true) ? 1 : 0);
+        }
+        printf("\n");
+        if (j % 8 == 7)
+        {
+            printf("\n");
+        }
     }
-    printf("\n");
-    // prints: 01000001
+    // prints:
+    // 0 0 0
+    // 1 1 1
+    // 0 1 1
+    // 0 0 0
+    // 0 1 1
+    // 0 0 1
+    // 0 0 1
+    // 1 0 1
+    //
+    // 0 0 0
+    // 1 0 0
+    // 1 0 0
+    // 0 0 0
+    // 1 0 0
+    // 0 0 0
+    // 1 0 0
+    // 0 0 0
 
-    bool bits2[8] = {0, 1, 0, 0, 0, 0, 0, 1};
-    printf("%c\n", decode_byte(bits2));
-    // prints: A
+    bool blocks2[2 * 8][3] = {
+        {0, 0, 0},
+        {1, 1, 1},
+        {0, 1, 1},
+        {0, 0, 0},
+        {0, 1, 1},
+        {0, 0, 1},
+        {0, 0, 1},
+        {1, 0, 1},
+        {0, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {0, 0, 0},
+        {1, 0, 0},
+        {0, 0, 0},
+        {1, 0, 0},
+        {0, 0, 0}};
+    bool bytes2[length][8];
+    blocks_to_bytes(3, 2, blocks2, length, bytes2);
+    for (int j = 0; j < length; j++)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            printf("%d", bytes2[j][i]);
+        }
+        printf("\n");
+    }
+    // prints:
+    // 01000001
+    // 01101000
+    // 01101111
+    // 01101010
+    // 00000000
 }
 
 int power(int base, int exp)
 {
+    if (base == 0 && exp <= 0)
+    {
+        return 0;
+    }
+
+    if (exp < 0)
+    {
+        return 0;
+    }
+
     int result = 1;
     for (int i = 0; i < exp; i++)
     {
@@ -33,6 +106,7 @@ int power(int base, int exp)
     }
     return result;
 }
+
 void encode_char(const char character, bool bits[8])
 {
     for (int i = 0; i < 8; i++)
@@ -44,19 +118,36 @@ void encode_char(const char character, bool bits[8])
 
 char decode_byte(const bool bits[8])
 {
-    char result = 0;
-    for (int i = 0; i < 8; i++)
+    char character = '\0';
+    bool temp_bits[8];
+
+    for (char c = 0; c < 128; c++)
     {
-        const char bit = bits[i] ? 1 : 0;
-        result = result | (bit << (7-i));
+        encode_char(c, temp_bits);
+
+        bool match = true;
+        for (int i = 0; i < 8; i++)
+        {
+            if (temp_bits[i] != bits[i])
+            {
+                match = false;
+                break;
+            }
+        }
+
+        if (match)
+        {
+            character = c;
+            break;
+        }
     }
-    return result;
+
+    return character;
 }
 
 void encode_string(const char string[], bool bytes[strlen(string) + 1][8])
 {
-    int len = strlen(string) + 1;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < (strlen(string) + 1); i++)
     {
         int ascii_value = (int)string[i];
         for (int j = 7; j >= 0; j--)
@@ -82,32 +173,63 @@ void decode_bytes(const int rows, bool bytes[rows][8], char string[rows])
         string[i] = (char)ascii_value;
     }
 }
+
+void fill_column(const int cols, const int offset, bool blocks[offset * 8][cols], int number_of_column, const int number_of_offset, char symbol)
+{
+    bool bits[8];
+    encode_char(symbol, bits);
+    for (int row = number_of_offset * 8; row < (number_of_offset * 8) + 8; row++)
+    {
+        blocks[row][number_of_column] = bits[row - number_of_offset * 8];
+    }
+}
+
 void bytes_to_blocks(const int cols, const int offset, bool blocks[offset * 8][cols], const int rows, bool bytes[rows][8])
 {
-    int block_row, block_col;
-
-    for (int i = 0; i < rows; i++)
+    int row = 0;
+    for (int number_of_offset = 0; number_of_offset < offset; number_of_offset++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int number_of_column = 0; number_of_column < cols;number_of_column++)
         {
-            block_row = (i / cols) * 8 + j;
-            block_col = i % cols;
-            blocks[block_row][block_col] = bytes[i][j];
+            char symbol = 0;
+            if(row < rows)
+            {
+                symbol = decode_byte(bytes[row]);
+            }
+            fill_column(cols, offset, blocks, number_of_column, number_of_offset, symbol);
+            row++;
         }
     }
 }
 
+char get_column(const int cols, const int offset, bool blocks[offset * 8][cols], int number_of_column, const int number_of_offset)
+{
+    bool bits[8];
+    int bit_index = 0;
+    for (int row = number_of_offset * 8; row < (number_of_offset * 8) + 8; row++)
+    {
+        bits[bit_index++] = blocks[row][number_of_column];
+    }
+    return decode_byte(bits);
+}
+
 void blocks_to_bytes(const int cols, const int offset, bool blocks[offset * 8][cols], const int rows, bool bytes[rows][8])
 {
-    int block_row, block_col;
-
-    for (int i = 0; i < rows; i++)
+    int row = 0;
+    for (int number_of_offset = 0; number_of_offset < offset; number_of_offset++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int number_of_column = 0; number_of_column < cols; number_of_column++)
         {
-            block_row = (i / cols) * 8 + j;
-            block_col = i % cols;
-            bytes[i][j] = blocks[block_row][block_col];
+            char symbol = get_column(cols, offset, blocks, number_of_column, number_of_offset);
+            if (row < rows)
+            {
+                encode_char(symbol, bytes[row]);
+            }
+            else
+            {
+                return;
+            }
+            row++;
         }
     }
 }
