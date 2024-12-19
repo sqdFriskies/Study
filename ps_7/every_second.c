@@ -11,6 +11,11 @@ bool is_stop(const char *word)
     return word[0] == 'S' && word[1] == 'T' && word[2] == 'O' && word[3] == 'P' && word[4] == '\0';
 }
 
+void write_space(FILE *output_file)
+{
+    fputc(' ', output_file);
+}
+
 void write_word(const char *word, FILE *output_file)
 {
     while (*word != '\0')
@@ -18,8 +23,9 @@ void write_word(const char *word, FILE *output_file)
         fputc(*word, output_file);
         word++;
     }
-    fputc(' ', output_file);
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -44,11 +50,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char word[256]; 
-    int index = 0;  
+    char word[256];
+    int index = 0;
     bool start_found = false;
     bool write_next = false;
-
+    bool is_file_empty = true;
     int ch;
     while ((ch = fgetc(input_file)) != -1)
     {
@@ -56,7 +62,7 @@ int main(int argc, char *argv[])
         {
             if (index > 0)
             {
-                word[index] = '\0'; 
+                word[index] = '\0';
 
                 if (!start_found)
                 {
@@ -67,26 +73,32 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
+                    
                     if (is_stop(word))
                     {
                         break;
                     }
-
+                     
                     if (write_next)
                     {
+                        if (!is_file_empty)
+                        {
+                            write_space(output_file);
+                        }
                         write_word(word, output_file);
+                        is_file_empty = false;
                     }
-
-                    write_next = !write_next; 
+                   
+                    write_next = !write_next;
                 }
 
-                index = 0; 
+                index = 0;
             }
         }
         else
         {
-            
-            if (index < 255)
+
+            if (index < 254)
             {
                 word[index++] = (char)ch;
             }
