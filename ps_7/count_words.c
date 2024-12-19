@@ -2,7 +2,7 @@
 #include <stdbool.h>
 void write_word(const char *word, FILE *file)
 {
-    while (*word != '\0') 
+    while (*word != '\0')
     {
         fputc(*word, file);
         word++;
@@ -61,7 +61,7 @@ char *custom_fgets(char *str, int n, FILE *file)
 
 void write_number(int number, FILE *file)
 {
-    char buffer[20]; 
+    char buffer[20];
     int index = 0;
 
     if (number == 0)
@@ -79,14 +79,15 @@ void write_number(int number, FILE *file)
 
     for (int i = index - 1; i >= 0; i--)
     {
-        
+
         fputc(buffer[i], file);
     }
 }
 
 int main(int argc, char *argv[])
 {
-    if(argc < 2) {
+    if (argc < 2)
+    {
         perror("Error opening file.");
         return 1;
     }
@@ -115,7 +116,7 @@ int main(int argc, char *argv[])
     file = fopen(argv[1], "w");
     if (file != NULL)
     {
-        write_number(count,file);
+        write_number(count, file);
         fclose(file);
     }
 

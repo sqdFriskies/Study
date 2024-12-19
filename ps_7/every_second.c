@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        perror("Usage: ./every_second input.txt output.txt\n");
+        perror("Error.\n");
         return 1;
     }
 
