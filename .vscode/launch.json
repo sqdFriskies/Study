@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Configure ps3",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/ps3",
+            "args": [],
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "cwd": "${workspaceRoot}/build",
+            "preLaunchTask": "Configure ps3",
+            "symbolLoadInfo": {
+                "loadAll": true,
+                "exceptionList": ""
+            }
+        },
+        {
+            "name": "Save & build debug ps3",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/ps3/ps3",
+            "args": [],
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "cwd": "${workspaceRoot}/build",
+            "preLaunchTask": "Save & build debug ps3",
+            "symbolLoadInfo": {
+                "loadAll": true,
+                "exceptionList": ""
+            }
+        }
+    ]
+}
