@@ -1,31 +1,36 @@
 #include <stdio.h>
-#include <
-int last_digit(unsigned long int number)
-{
-    int result = number % 10;
-    printf("last digit = %d\n", result);
-    return result;
-}
+#include <ctype.h>
 
-int main()
+int main() 
 {
-    unsigned long int number;
-    scanf("%lu", &number);
-    
-    printf("number = %lu\n", number);
-    unsigned long int result = number;
-    while (result > 9)
-    {
-        int sum = 0;
-        while (result > 0)
-        {
-            sum = sum + (last_digit(result));
-            result = result / 10;
-            printf("sum = %d; result = %lu\n",sum, result);
-        }
-        result = sum;
+    char num[101];
+    if (scanf("%100s", num) != 1)
+     {
+        return 1; 
     }
 
-    printf("%lu\n", result);
+    unsigned long long sum = 0;
+    for (int i = 0; num[i] != '\0'; i++) 
+    {
+        if (!isdigit((unsigned char)num[i]))
+         {
+            return 1; 
+        }
+        sum += num[i] - '0';
+    }
+
+    unsigned long long result = sum;
+    while (result > 9)
+    {
+        unsigned long long temp_sum = 0;
+        while (result > 0) 
+        {
+            temp_sum += result % 10;
+            result /= 10;
+        }
+        result = temp_sum;
+    }
+
+    printf("%llu\n", result);
     return 0;
 }
